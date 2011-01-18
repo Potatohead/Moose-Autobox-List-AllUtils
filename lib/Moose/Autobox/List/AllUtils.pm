@@ -10,7 +10,13 @@ use Moose::Autobox;
     use List::AllUtils;
     use Moose::Autobox;
 
-=head2 first_match
+=func first_match
+
+    my $first = @arr->first_match(sub {defined $_});
+    my $first = $arr->first_match(sub {defined $_});
+
+Finds the first element of the array that returns the result true from the sub.
+Functionality of L<List::Util::First|List::Util/First>
 
 =cut
 
