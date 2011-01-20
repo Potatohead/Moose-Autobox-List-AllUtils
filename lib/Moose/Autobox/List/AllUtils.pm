@@ -15,8 +15,11 @@ use Moose::Autobox;
     my $first = @arr->first_match(sub {defined $_});
     my $first = $arr->first_match(sub {defined $_});
 
-Finds the first element of the array that returns the result true from the sub.
-Functionality of L<List::Util::First|List::Util/First>
+Similar to grep in that it evaluates BLOCK setting $_ to each element of LIST in
+turn. first returns the first element where the result from BLOCK is a true
+value. If BLOCK never returns true or LIST was empty then undef is returned.
+
+Functionality of L<List::Util::first|List::Util/first>
 
 =cut
 
@@ -25,11 +28,42 @@ Functionality of L<List::Util::First|List::Util/First>
         return List::AllUtils::first { $block->($_) } @$array;
     }
 
-#    max
-#    maxstr
+=func max
+
+    my $max = @arr->max;
+    my $max = $arr->max;
+
+Returns the entry in the list with the highest numerical value. If the list is
+empty then undef is returned.
+
+Functionality of L<List::Util::max|List::Util/max>
+
+=cut
+
+    sub max {
+        my ($array) = @_;
+        return List::AllUtils::max @$array;
+    }
+
+=func maxstr
+
+    my $maxstr = @arr->maxstr;
+    my $maxstr = $arr->maxstr;
+
+Similar to max, but treats all the entries in the list as strings and returns
+the highest string as defined by the gt operator. If the list is empty then
+undef is returned.
+
+=cut
+
+    sub maxstr {
+        my ($array) = @_;
+        return List::AllUtils::maxstr @$array;
+    }
+
 #    min
 #    minstr
-#    *reduce -overwrite
+#    *reduce -overwrite -reexamine
 #    shuffle
 #    sum
 #    any *junc any_match
