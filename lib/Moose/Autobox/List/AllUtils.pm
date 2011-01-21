@@ -81,7 +81,25 @@ Functionality of L<List::Util::min|List::Util/min>
         return List::AllUtils::min @$array;
     }
 
-#    minstr
+=func minstr
+
+    $foo = ('A'..'Z')->minstr         # 'A'
+    $foo = ["hello","world"]->minstr  # "hello"
+
+Similar to C<min>, but treats all the entries in the list as strings
+and returns the lowest string as defined by the C<lt> operator.
+If the list is empty then C<undef> is returned.
+
+Functionality of L<List::Util::minstr|List::Util/minstr>
+
+=cut
+
+    sub minstr {
+        my ($array) = @_;
+        return List::AllUtils::minstr @$array;
+    }
+
+
 #    *reduce -overwrite -reexamine
 #    shuffle
 #    sum

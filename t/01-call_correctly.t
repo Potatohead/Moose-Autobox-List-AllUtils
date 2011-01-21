@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use Moose::Autobox;
 use Moose::Autobox::List::AllUtils;
@@ -42,4 +42,12 @@ min: {
 
     is (@test_arr->min, 1, 'min: invoke by ARRAY');
     is ($test_ref->min, 1, 'min: invoke by ARRAYREF');
+}
+
+minstr: {
+    my @test_arr = ('hello','world');
+    my $test_ref = ['hello','world'];
+
+    is (@test_arr->minstr, 'hello', 'minstr: invoke by ARRAY');
+    is ($test_ref->minstr, 'hello', 'minstr: invoke by ARRAYREF');
 }
