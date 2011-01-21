@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use Moose::Autobox;
 use Moose::Autobox::List::AllUtils;
@@ -34,4 +34,12 @@ maxstr: {
 
     is (@test_arr->maxstr, 'world', 'maxstr: invoke by ARRAY');
     is ($test_ref->maxstr, 'world', 'maxstr: invoke by ARRAYREF');
+}
+
+min: {
+    my @test_arr = (1..10);
+    my $test_ref = [1..10];
+
+    is (@test_arr->min, 1, 'min: invoke by ARRAY');
+    is ($test_ref->min, 1, 'min: invoke by ARRAYREF');
 }

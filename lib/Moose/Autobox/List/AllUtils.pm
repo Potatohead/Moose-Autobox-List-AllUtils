@@ -15,9 +15,10 @@ use Moose::Autobox;
     my $first = @arr->first_match(sub {defined $_});
     my $first = $arr->first_match(sub {defined $_});
 
-Similar to grep in that it evaluates BLOCK setting $_ to each element of LIST in
-turn. first returns the first element where the result from BLOCK is a true
-value. If BLOCK never returns true or LIST was empty then undef is returned.
+Similar to C<grep> in that it evaluates BLOCK setting C<$_> to each element
+of LIST in turn. C<first> returns the first element where the result from
+BLOCK is a true value. If BLOCK never returns true or LIST was empty then
+C<undef> is returned.
 
 Functionality of L<List::Util::first|List::Util/first>
 
@@ -30,11 +31,11 @@ Functionality of L<List::Util::first|List::Util/first>
 
 =func max
 
-    my $max = @arr->max;
-    my $max = $arr->max;
+    $foo = (1..10)->max               # 10
+    $foo = [3,9,12]->max              # 12
 
-Returns the entry in the list with the highest numerical value. If the list is
-empty then undef is returned.
+Returns the entry in the list with the highest numerical value. If the
+list is empty then C<undef> is returned.
 
 Functionality of L<List::Util::max|List::Util/max>
 
@@ -47,12 +48,14 @@ Functionality of L<List::Util::max|List::Util/max>
 
 =func maxstr
 
-    my $maxstr = @arr->maxstr;
-    my $maxstr = $arr->maxstr;
+    $foo = ('A'..'Z')->maxstr         # 'Z'
+    $foo = ["hello","world"]->maxstr  # "world"
 
-Similar to max, but treats all the entries in the list as strings and returns
-the highest string as defined by the gt operator. If the list is empty then
-undef is returned.
+Similar to C<max>, but treats all the entries in the list as strings
+and returns the highest string as defined by the C<gt> operator.
+If the list is empty then C<undef> is returned.
+
+Functionality of L<List::Util::maxstr|List::Util/maxstr>
 
 =cut
 
@@ -61,7 +64,23 @@ undef is returned.
         return List::AllUtils::maxstr @$array;
     }
 
-#    min
+=func min
+
+    $foo = (1..10)->min               # 1
+    $foo = [3,9,12]->min              # 3
+
+Similar to C<max> but returns the entry in the list with the lowest
+numerical value. If the list is empty then C<undef> is returned.
+
+Functionality of L<List::Util::min|List::Util/min>
+
+=cut
+
+    sub min {
+        my ($array) = @_;
+        return List::AllUtils::min @$array;
+    }
+
 #    minstr
 #    *reduce -overwrite -reexamine
 #    shuffle
