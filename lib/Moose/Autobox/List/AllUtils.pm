@@ -99,8 +99,33 @@ Functionality of L<List::Util::minstr|List::Util/minstr>
         return List::AllUtils::minstr @$array;
     }
 
+=func reduce
 
-#    *reduce -overwrite -reexamine
+    $foo = (1 .. 5)->reduce( sub {$_[0] + $_[1]} )  #sum .. 15
+    $foo = [1 .. 5]->reduce( sub {$_[0] . $_[1]} )  #concat .. 12345 
+
+Reduces LIST by calling BLOCK, in a scalar context, multiple times,
+setting C<$_[0]> and C<$_[1]> each time. The first call will be with C<$_[0]>
+and C<$_[1]> set to the first two elements of the list, subsequent
+calls will be done by setting C<$_[0]> to the result of the previous
+call and C<$_[1]> to the next element in the list.
+
+Returns the result of the last call to BLOCK. If LIST is empty then
+C<undef> is returned. If LIST only contains one element then that
+element is returned and BLOCK is not executed.
+
+Functionality of L<List::Util::reduce|List::Util/reduce>
+
+Replaces the implementation of reduce in Moose::Autobox with the one in
+L<List::Util> invoked with the same api.
+
+=cut
+
+    sub reduce {
+        my ($array, $block);
+        return List::AllUtils::reduce { $block->($a, $b) } @$array;
+    }
+
 #    shuffle
 #    sum
 #    any *junc any_match

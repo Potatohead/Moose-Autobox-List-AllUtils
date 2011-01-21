@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 12;
 
 use Moose::Autobox;
 use Moose::Autobox::List::AllUtils;
@@ -51,3 +51,12 @@ minstr: {
     is (@test_arr->minstr, 'hello', 'minstr: invoke by ARRAY');
     is ($test_ref->minstr, 'hello', 'minstr: invoke by ARRAYREF');
 }
+
+reduce: {
+    my @test_arr = (1..5);
+    my $test_arr = [1..5];
+
+    is (@test_arr->reduce(sub {$_[0] + $_[1]}), 15, 'reduce: invoke by ARRAY');
+    is ($test_arr->reduce(sub {$_[0] + $_[1]}), 15, 'reduce: invoke by ARRAYREF');
+}
+
