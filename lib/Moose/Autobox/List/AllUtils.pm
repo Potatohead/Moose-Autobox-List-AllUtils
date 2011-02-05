@@ -31,8 +31,8 @@ Functionality of L<List::Util::first|List::Util/first>
 
 =func max
 
-    $foo = (1..10)->max               # 10
-    $foo = [3,9,12]->max              # 12
+    $foo = @arr->max
+    $foo = $arr->max
 
 Returns the entry in the list with the highest numerical value. If the
 list is empty then C<undef> is returned.
@@ -48,8 +48,8 @@ Functionality of L<List::Util::max|List::Util/max>
 
 =func maxstr
 
-    $foo = ('A'..'Z')->maxstr         # 'Z'
-    $foo = ["hello","world"]->maxstr  # "world"
+    $foo = @arr->maxstr
+    $foo = $arr->maxstr
 
 Similar to C<max>, but treats all the entries in the list as strings
 and returns the highest string as defined by the C<gt> operator.
@@ -66,8 +66,8 @@ Functionality of L<List::Util::maxstr|List::Util/maxstr>
 
 =func min
 
-    $foo = (1..10)->min               # 1
-    $foo = [3,9,12]->min              # 3
+    $foo = @arr->min
+    $foo = $arr->min
 
 Similar to C<max> but returns the entry in the list with the lowest
 numerical value. If the list is empty then C<undef> is returned.
@@ -83,8 +83,8 @@ Functionality of L<List::Util::min|List::Util/min>
 
 =func minstr
 
-    $foo = ('A'..'Z')->minstr         # 'A'
-    $foo = ["hello","world"]->minstr  # "hello"
+    $foo = @arr->minstr
+    $foo = $arr->minstr
 
 Similar to C<min>, but treats all the entries in the list as strings
 and returns the lowest string as defined by the C<lt> operator.
@@ -101,8 +101,8 @@ Functionality of L<List::Util::minstr|List::Util/minstr>
 
 =func reduce
 
-    $foo = (1 .. 5)->reduce( sub {$_[0] + $_[1]} )  #sum .. 15
-    $foo = [1 .. 5]->reduce( sub {$_[0] . $_[1]} )  #concat .. 12345 
+    $foo = @arr->reduce( sub {$_[0] + $_[1]} )
+    $foo = $arr->reduce( sub {$_[0] . $_[1]} )
 
 Reduces LIST by calling BLOCK, in a scalar context, multiple times,
 setting C<$_[0]> and C<$_[1]> each time. The first call will be with C<$_[0]>
@@ -122,24 +122,260 @@ L<List::Util> invoked with the same api.
 =cut
 
     sub reduce {
-        my ($array, $block);
+        my ($array, $block) = @_;
         return List::AllUtils::reduce { $block->($a, $b) } @$array;
     }
 
-#    shuffle
-#    sum
-#    any *junc any_match
-#    all *junc all_match
-#    none *junc none_match
-#    notall notall_match
-#    true
-#    false
-#    firstidx
-#    first_index
-#    lastidx
-#    last_index
-#    insert_after
-#    insert_after_string
+=func shuffle
+
+    $array_ref = @arr->shuffle
+    $array_ref = $arr->shuffle
+
+Returns the elements of LIST in a random order
+
+Functionality of L<List::Util::shuffle|List::Util/shuffle>
+
+=cut
+
+    sub shuffle {
+        my ($array) = @_;
+
+        return (wantarray
+            ? (List::AllUtils::shuffle @$array)
+            : [List::AllUtils::shuffle @$array]);
+    }
+
+=func sum
+
+   $foo = @arr->sum
+   $foo = $arr->sum
+
+Returns the sum of all the elements in LIST. If LIST is empty then C<undef>
+is returned.
+
+Functionality of L<List::Util::sum|List::Util/sum>
+
+=cut
+
+    sub sum {
+        my ($array) = @_;
+        return List::AllUtils::sum @$array;
+    }
+
+
+=func any_match
+
+    print "At least one value is defined" @arr->any_match( sub{ defined $_ } );
+    print "At least one value is defined" $arr->any_match( sub{ defined $_ } );
+
+Returns a true value if any item in LIST meets the criterion given through
+BLOCK. Sets C<$_> for each item in LIST in turn. Returns false otherwise, or
+C<undef> if LIST is empty.
+
+Functionality of L<List::MoreUtil::any|List::MoreUtil/any>
+
+=cut
+
+    sub any_match {
+        my ($array, $block) = @_;
+        return List::AllUtils::any { $block->($_) } @$array;
+    }
+
+=func all_match
+
+    print "All values are defined" @arr->all_match( sub{ defined $_ } );
+    print "All values are defined" $arr->all_match( sub{ defined $_ } );
+
+Returns a true value if all items in LIST meet the criterion given through
+BLOCK. Sets C<$_> for each item in LIST in turn. Returns false otherwise, or
+C<undef> if LIST is empty.
+
+Functionality of L<List::MoreUtil::all|List::MoreUtil/all>
+
+=cut
+
+    sub all_match {
+        my ($array, $block) = @_;
+        return List::AllUtils::all { $block->($_) } @$array;
+    }
+
+=func none_match
+
+    print "None of the values are defined" @arr->none_match( sub{ defined $_ } );
+    print "None of the values are defined" $arr->none_match( sub{ defined $_ } );
+
+Logically the negation of C<any>. Returns a true value if no item in LIST meets
+the criterion given through BLOCK. Sets C<$_> for each item in LIST in turn.
+Returns false otherwise, or C<undef> if the list is empty.
+
+Functionality of L<List::MoreUtil::none|List::MoreUtil/none>
+
+=cut
+
+    sub none_match {
+        my ($array, $block) = @_;
+        return List::AllUtils::none { $block->($_)} @$array;
+    }
+
+=func notall_match
+
+    print "At least 1 of the values are defined"
+        @arr->notall_match( sub{ defined $_ } );
+    print "At least 1 of the values are defined"
+        $arr->notall_match( sub{ defined $_ } );
+
+Logically the negation of C<all>. Returns a true value if not all items in LIST
+meet the criterion given through BLOCK. Sets C<$_> for each item in LIST in
+turn. Return false otherwise, or C<undef> if the list is empty.
+
+Functionality of L<List::MoreUtil::notall|List::MoreUtil/notall>
+
+=cut
+
+    sub notall_match {
+        my ($array, $block) = @_;
+        return List::AllUtils::notall { $block->($_)} @$array;
+    }
+
+=func true
+
+    $count_of_true = @arr->true( sub { defined $_ } );
+    $count_of_true = $arr->true( sub { defined $_ } );
+
+Counts the number of elements in LIST for which the criterion in BLOCK is true.
+Sets C<$_> for each item in LIST in turn.
+
+Functionality of L<List::MoreUtil::true|List::MoreUtil/true>
+
+=cut
+
+    sub true {
+        my ($array, $block) = @_;
+        return List::AllUtils::true { $block->($_)} @$array;
+    }
+
+=func false
+
+    $count_of_true = @arr->true( sub { defined $_ } );
+    $count_of_true = $arr->true( sub { defined $_ } );
+
+Counts the number of elements in LIST for which the criterion in BLOCK is false.
+Sets C<$_> for each item in LIST in turn.
+
+Functionality of L<List::MoreUtil::false|List::MoreUtil/false>
+
+=cut
+
+    sub false {
+        my ($array, $block) = @_;
+        return List::AllUtils::false { $block->($_)} @$array;
+    }
+
+=func firstidx
+
+=func first_index
+
+    $index_of_first_defined = @arr->first_index( sub { defined $_ } );
+
+Returns the index of the first element in LIST for which the criterion in BLOCK
+is true. Sets C<$_> for each item in LIST in turn. Returns C<-1> if no such item
+could be found.
+
+C<firstidx> is an alias for C<first_index>.
+
+Functionality of L<List::MoreUtil::first_index|List::MoreUtil/first_index>
+
+=cut
+
+    sub first_index {
+        my ($array, $block) = @_;
+        return List::AllUtils::first_index { $block->($_)} @$array;
+    }
+
+    # Should alias this func, later
+    sub firstidx {
+        my ($array, $block) = @_;
+        return List::AllUtils::first_index { $block->($_)} @$array;
+    }
+
+=func lastidx
+
+=func last_index
+
+    $index_of_the_last_defind = @arr->last_index( sub { defined $_ } );
+
+Returns the index of the last element in LIST for which the criterion in BLOCK
+is true. Sets C<$_> for each item in LIST in turn. Returns C<-1> if no such item
+could be found.
+
+C<lastidx> is an alias for C<last_idx>.
+
+Functionality of L<List::MoreUtil::last_index|List::MoreUtil/last_index>
+
+=cut
+
+    sub last_index {
+        my ($array, $block) = @_;
+        return List::AllUtils::last_index { $block->($_)} @$array;
+    }
+
+    # Should alias this func, later
+    sub lastidx {
+        my ($array, $block) = @_;
+        return List::AllUtils::last_index { $block->($_)} @$array;
+    }
+
+=func insert_after
+
+    my @arr = qw/this is a list/;
+    @longer_list = @arr->insert_after( sub { $_ eq 'a'}, 'longer');
+
+Inserts VALUE after the first item in LIST for which the criterion in BLOCK is
+true. Sets C<$_> for each item in LIST in turn.
+
+Functionality of L<List::MoreUtil::insert_after|List::MoreUtil/insert_after>
+
+=cut
+
+    sub insert_after {
+        my ($array, $block, $item) = @_;
+
+        # damn mutating function means we have to copy the array. Can't wait for
+        # perl6's .= to make functions like this a silly idea
+        my @result = @$array;
+
+        List::AllUtils::insert_after {$block->($_)} $item => @result;
+
+        return (wantarray
+            ? @result
+            : \@result);
+    }
+
+=func insert_after_string
+
+    my @arr = qw/this is a list/;
+    @longer_list = @arr->insert_after_string( 'a', 'longer' );
+
+Inserts VALUE after the first item in LIST which is equal to STRING.
+
+Functionality of
+L<List::MoreUtil::insert_after_string|List::MoreUtil/insert_after_string>
+
+=cut
+
+    sub insert_after_string {
+        my ($array, $string, $item) = @_;
+
+        # as per above, again
+        my @result = @$array;
+
+        List::AllUtils::insert_after_string $string, $item => @result;
+
+        return (wantarray
+            ? @result
+            : \@result);
+    }
+
 #    apply
 #    after
 #    after_incl
@@ -155,7 +391,7 @@ L<List::Util> invoked with the same api.
 #    each_arrayref
 #    natatime
 #    mesh
-#    *zip zip2
+#    *zip zip2 *dont
 #    uniq
 #    minmax
 #    part
