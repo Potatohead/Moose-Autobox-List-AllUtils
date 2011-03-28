@@ -226,4 +226,21 @@ insert_after_string: {
     );
 }
 
+apply: {
+    my @test_arr = (1..5);
+    my $test_arr = [1..5];
+
+    is_deeply(
+      [@test_arr->apply(sub{ $_++ })],
+      [2..6],
+      'apply: invoke by ARRAY returning ARRAY'
+    );
+
+    is_deeply(
+      [$test_arr->apply(sub{$_++})],
+      [2..6],
+      'apply: invoke by ARRAYREF returning ARRAY'
+    );
+}
+
 done_testing;

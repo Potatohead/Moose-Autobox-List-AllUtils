@@ -376,7 +376,22 @@ L<List::MoreUtil::insert_after_string|List::MoreUtil/insert_after_string>
             : \@result);
     }
 
-#    apply
+=func apply
+
+    my @list_plus_1 = @arr->apply(sub { $_++ } );
+
+Applies BLOCK to each item in LIST and returns a list of the values after BLOCK
+has been applied. In scalar context, the last element is returned.  This
+function is similar to C<map> but will not modify the elements of the input
+list:
+
+=cut
+
+    sub apply {
+        my ($array, $block) = @_;
+        return List::AllUtils::apply {$block->($_)} @$array;
+    }
+
 #    after
 #    after_incl
 #    before
